@@ -3,10 +3,13 @@ const router = express.Router();
 const verifyToken = require('../middlewares/authMiddleware');
 const connectionController = require('../controllers/connectionController');
 
-router.post('/', verifyToken, connectionController.send);
+const validate = require('../middlewares/validate');
+const { sendRequestSchema, decisionSchema } = require('../validators/connectionValidator');
+
+router.post('/', verifyToken, validate(sendRequestSchema), connectionController.send);
 router.get('/my-requests', verifyToken, connectionController.myRequests);
 router.get('/incoming', verifyToken, connectionController.incomingRequests);
-router.patch('/:id/decision', verifyToken, connectionController.decide);
+router.patch('/:id/decision', verifyToken, validate(decisionSchema), connectionController.decide);
 router.delete('/:id', verifyToken, connectionController.withdraw);
 
 module.exports = router;

@@ -11,6 +11,8 @@ const listingRoutes = require('./routes/listingRoutes');
 app.use('/api/listings', listingRoutes);
 const connectionRoutes = require('./routes/connectionRoutes');
 app.use('/api/connections', connectionRoutes);
+const errorHandler = require('./middlewares/errorHandler');
+app.use(errorHandler);
 
 // Test route
 app.get('/', (req, res) => {
