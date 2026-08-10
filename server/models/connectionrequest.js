@@ -1,4 +1,4 @@
-const { REQUEST_STATUS } = require('../utils/enums');
+const { REQUEST_STATUS } = require('../enums');
 
 module.exports = (sequelize, DataTypes) => {
   const ConnectionRequest = sequelize.define('ConnectionRequest', {

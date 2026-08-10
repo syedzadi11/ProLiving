@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { ROOM_TYPES } = require('../utils/enums');
+const { ROOM_TYPES } = require('../enums');
 
 const createListingSchema = Joi.object({
   title: Joi.string().min(3).max(150).required(),
