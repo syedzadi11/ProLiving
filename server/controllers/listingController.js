@@ -18,6 +18,24 @@ const search = async (req, res) => {
   }
 };
 
+const getOne = async (req, res) => {
+  try {
+    const listing = await listingService.getListingById(req.params.id);
+    res.status(200).json({ listing });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({ message: err.message });
+  }
+};
+
+const myListings = async (req, res) => {
+  try {
+    const listings = await listingService.getMyListings(req.user.user_id);
+    res.status(200).json({ listings });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 const update = async (req, res) => {
   try {
     const listing = await listingService.updateListing(req.params.id, req.user.user_id, req.body);
@@ -54,4 +72,4 @@ const reactivate = async (req, res) => {
   }
 };
 
-module.exports = { create, search, update, remove, markRented, reactivate };
+module.exports = { create, search, getOne, myListings, update, remove, markRented, reactivate };

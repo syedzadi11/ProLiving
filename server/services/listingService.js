@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 
 const createListing = async (userId, data) => {
   const expiryDate = new Date();
-  expiryDate.setDate(expiryDate.getDate() + 30);   // 30 days from now
+  expiryDate.setDate(expiryDate.getDate() + 30);
 
   const listing = await Listing.create({
     ...data,
@@ -18,7 +18,7 @@ const createListing = async (userId, data) => {
 const searchListings = async (filters) => {
   const where = {
     status: 'Active',
-    expiry_date: { [Op.gt]: new Date() }   // hide expired listings
+    expiry_date: { [Op.gt]: new Date() }
   };
 
   if (filters.city) where.city = filters.city;
@@ -46,6 +46,24 @@ const searchListings = async (filters) => {
   });
 
   return { listings: rows, total: count, page, totalPages: Math.ceil(count / limit) };
+};
+
+const getListingById = async (listingId) => {
+  const listing = await Listing.findByPk(listingId);
+  if (!listing) {
+    const error = new Error('Listing not found');
+    error.statusCode = 404;
+    throw error;
+  }
+  return listing;
+};
+
+const getMyListings = async (userId) => {
+  const listings = await Listing.findAll({
+    where: { user_id: userId },
+    order: [['created_at', 'DESC']]
+  });
+  return listings;
 };
 
 const updateListing = async (listingId, userId, data) => {
@@ -94,6 +112,8 @@ const reactivateListing = async (listingId, userId) => {
 module.exports = {
   createListing,
   searchListings,
+  getListingById,
+  getMyListings,
   updateListing,
   deleteListing,
   markAsRented,
