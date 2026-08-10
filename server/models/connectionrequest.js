@@ -1,3 +1,5 @@
+const { REQUEST_STATUS } = require('../utils/enums');
+
 module.exports = (sequelize, DataTypes) => {
   const ConnectionRequest = sequelize.define('ConnectionRequest', {
     connection_id: {
@@ -17,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT
     },
     status: {
-      type: DataTypes.ENUM('Pending', 'Accepted', 'Rejected'),
+      type: DataTypes.ENUM(...REQUEST_STATUS),
       allowNull: false,
       defaultValue: 'Pending'
     }
@@ -30,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     indexes: [
       {
         unique: true,
-        fields: ['listing_id', 'user_id']   // spam mitigation constraint
+        fields: ['listing_id', 'user_id']
       }
     ]
   });

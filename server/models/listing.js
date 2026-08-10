@@ -1,3 +1,5 @@
+const { ROOM_TYPES, LISTING_STATUS } = require('../utils/enums');
+
 module.exports = (sequelize, DataTypes) => {
   const Listing = sequelize.define('Listing', {
     listing_id: {
@@ -25,16 +27,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     room_type: {
-      type: DataTypes.ENUM('Single Room', 'Shared Room', 'Full Apartment'),
+      type: DataTypes.ENUM(...ROOM_TYPES),
       allowNull: false
     },
     monthly_rent: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      validate: { min: 0.01 }   // rental amount > 0 (mentor's requirement)
+      validate: { min: 0.01 }
     },
     status: {
-      type: DataTypes.ENUM('Active', 'Rented', 'Expired'),
+      type: DataTypes.ENUM(...LISTING_STATUS),
       allowNull: false,
       defaultValue: 'Active'
     },
