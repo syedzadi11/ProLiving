@@ -1,4 +1,6 @@
-const { ROOM_TYPES, LISTING_STATUS } = require('../enums');
+
+const ROOM_TYPES = require('../enums/room-type.enum');
+const LISTING_STATUS = require('../enums/listing-status.enum');
 
 module.exports = (sequelize, DataTypes) => {
   const Listing = sequelize.define('Listing', {

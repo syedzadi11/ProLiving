@@ -1,0 +1,1 @@
+module.exports = ['Single Room', 'Shared Room', 'Full Apartment'];

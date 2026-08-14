@@ -1,5 +1,10 @@
+
+
+
 const { Listing } = require('../models');
 const { Op } = require('sequelize');
+const AppError = require('../utils/AppError');
+const httpStatus = require('../utils/httpStatus');
 
 const createListing = async (userId, data) => {
   const expiryDate = new Date();
@@ -51,32 +56,25 @@ const searchListings = async (filters) => {
 const getListingById = async (listingId) => {
   const listing = await Listing.findByPk(listingId);
   if (!listing) {
-    const error = new Error('Listing not found');
-    error.statusCode = 404;
-    throw error;
+    throw new AppError('Listing not found', httpStatus.NOT_FOUND);
   }
   return listing;
 };
 
 const getMyListings = async (userId) => {
-  const listings = await Listing.findAll({
+  return Listing.findAll({
     where: { user_id: userId },
     order: [['created_at', 'DESC']]
   });
-  return listings;
 };
 
 const updateListing = async (listingId, userId, data) => {
   const listing = await Listing.findByPk(listingId);
   if (!listing) {
-    const error = new Error('Listing not found');
-    error.statusCode = 404;
-    throw error;
+    throw new AppError('Listing not found', httpStatus.NOT_FOUND);
   }
   if (listing.user_id !== userId) {
-    const error = new Error('You are not allowed to edit this listing');
-    error.statusCode = 403;
-    throw error;
+    throw new AppError('You are not allowed to edit this listing', httpStatus.FORBIDDEN);
   }
 
   await listing.update(data);
@@ -86,14 +84,10 @@ const updateListing = async (listingId, userId, data) => {
 const deleteListing = async (listingId, userId) => {
   const listing = await Listing.findByPk(listingId);
   if (!listing) {
-    const error = new Error('Listing not found');
-    error.statusCode = 404;
-    throw error;
+    throw new AppError('Listing not found', httpStatus.NOT_FOUND);
   }
   if (listing.user_id !== userId) {
-    const error = new Error('You are not allowed to delete this listing');
-    error.statusCode = 403;
-    throw error;
+    throw new AppError('You are not allowed to delete this listing', httpStatus.FORBIDDEN);
   }
 
   await listing.destroy();

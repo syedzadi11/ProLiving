@@ -1,5 +1,7 @@
 const Joi = require('joi');
-const { REQUEST_STATUS } = require('../enums');
+
+
+const REQUEST_STATUS = require('../enums/request-status.enum');
 
 const sendRequestSchema = Joi.object({
   listing_id: Joi.number().integer().required(),

@@ -1,48 +1,30 @@
 const connectionService = require('../services/connectionService');
+const asyncHandler = require('../middlewares/asyncHandler');
+const httpStatus = require('../utils/httpStatus');
 
-const send = async (req, res) => {
-  try {
-    const request = await connectionService.sendRequest(req.user.user_id, req.body.listing_id, req.body.message);
-    res.status(201).json({ message: 'Request sent', request });
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ message: err.message });
-  }
-};
+const send = asyncHandler(async (req, res) => {
+  const request = await connectionService.sendRequest(req.user.user_id, req.body.listing_id, req.body.message);
+  res.status(httpStatus.CREATED).json({ message: 'Request sent', request });
+});
 
-const myRequests = async (req, res) => {
-  try {
-    const requests = await connectionService.getMyRequests(req.user.user_id);
-    res.status(200).json({ requests });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+const myRequests = asyncHandler(async (req, res) => {
+  const requests = await connectionService.getMyRequests(req.user.user_id);
+  res.status(httpStatus.OK).json({ requests });
+});
 
-const incomingRequests = async (req, res) => {
-  try {
-    const requests = await connectionService.getIncomingRequests(req.user.user_id);
-    res.status(200).json({ requests });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+const incomingRequests = asyncHandler(async (req, res) => {
+  const requests = await connectionService.getIncomingRequests(req.user.user_id);
+  res.status(httpStatus.OK).json({ requests });
+});
 
-const decide = async (req, res) => {
-  try {
-    const result = await connectionService.decideRequest(req.params.id, req.user.user_id, req.body.decision);
-    res.status(200).json({ message: `Request ${req.body.decision.toLowerCase()}`, ...result });
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ message: err.message });
-  }
-};
+const decide = asyncHandler(async (req, res) => {
+  const result = await connectionService.decideRequest(req.params.id, req.user.user_id, req.body.decision);
+  res.status(httpStatus.OK).json({ message: `Request ${req.body.decision.toLowerCase()}`, ...result });
+});
 
-const withdraw = async (req, res) => {
-  try {
-    await connectionService.withdrawRequest(req.params.id, req.user.user_id);
-    res.status(200).json({ message: 'Request withdrawn' });
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ message: err.message });
-  }
-};
+const withdraw = asyncHandler(async (req, res) => {
+  await connectionService.withdrawRequest(req.params.id, req.user.user_id);
+  res.status(httpStatus.OK).json({ message: 'Request withdrawn' });
+});
 
 module.exports = { send, myRequests, incomingRequests, decide, withdraw };

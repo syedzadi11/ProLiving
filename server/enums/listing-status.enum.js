@@ -1,0 +1,1 @@
+module.exports = ['Active', 'Rented', 'Expired'];
