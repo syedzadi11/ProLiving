@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
-const AppError = require('../utils/AppError');
+const AppError = require('../errors/AppError');
 const httpStatus = require('../utils/httpStatus');
 const { hashPassword, comparePassword } = require('../utils/passwordUtils');
 

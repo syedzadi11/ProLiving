@@ -1,5 +1,5 @@
 const { ConnectionRequest, Listing, User } = require('../models');
-const AppError = require('../utils/AppError');
+const AppError = require('../errors/AppError');
 const httpStatus = require('../utils/httpStatus');
 
 const sendRequest = async (userId, listingId, message) => {

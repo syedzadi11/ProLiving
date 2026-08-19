@@ -3,7 +3,7 @@
 
 const { Listing } = require('../models');
 const { Op } = require('sequelize');
-const AppError = require('../utils/AppError');
+const AppError = require('../errors/AppError');
 const httpStatus = require('../utils/httpStatus');
 
 const createListing = async (userId, data) => {
