@@ -27,10 +27,23 @@ const sendRequest = async (userId, listingId, message) => {
   });
 };
 
+
 const getMyRequests = async (userId) => {
-  return ConnectionRequest.findAll({
+  const requests = await ConnectionRequest.findAll({
     where: { user_id: userId },
-    include: [{ model: Listing }]
+    include: [{
+      model: Listing,
+      include: [{ model: User, attributes: ['user_id', 'full_name', 'phone'] }]
+    }]
+  });
+
+  // Hide phone unless the request is Accepted
+  return requests.map((r) => {
+    const plain = r.toJSON();
+    if (plain.status !== 'Accepted' && plain.Listing?.User) {
+      delete plain.Listing.User.phone;
+    }
+    return plain;
   });
 };
 

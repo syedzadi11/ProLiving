@@ -1,7 +1,14 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
+
+// Allow requests from the Next.js frontend
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
 
 // Middleware to parse JSON request bodies
 app.use(express.json());

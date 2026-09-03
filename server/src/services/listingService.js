@@ -1,7 +1,6 @@
 
 
-
-const { Listing } = require('../models');
+const { Listing, User } = require('../models'); 
 const { Op } = require('sequelize');
 const AppError = require('../errors/AppError');
 const httpStatus = require('../utils/httpStatus');
@@ -54,12 +53,15 @@ const searchListings = async (filters) => {
 };
 
 const getListingById = async (listingId) => {
-  const listing = await Listing.findByPk(listingId);
+  const listing = await Listing.findByPk(listingId, {
+    include: [{ model: User, attributes: ['user_id', 'full_name'] }]
+  });
   if (!listing) {
     throw new AppError('Listing not found', httpStatus.NOT_FOUND);
   }
   return listing;
 };
+
 
 const getMyListings = async (userId) => {
   return Listing.findAll({
