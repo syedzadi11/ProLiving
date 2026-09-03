@@ -1,0 +1,10 @@
+# Future planning notes (not part of the actual codebase)
+FUTURE_FEATURES.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
