@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { toast } from "sonner";
 import { listingSchema, ListingFormData } from "@/lib/validations/listing";
 import { api } from "@/lib/api";
 import { Listing } from "@/types/listing";
@@ -43,14 +44,12 @@ export default function EditListingPage() {
     if (!authLoading && !token) router.push("/login");
   }, [authLoading, token, router]);
 
-  // Fetch existing listing data
   const { data, isLoading } = useQuery<{ listing: Listing }>({
     queryKey: ["listing", id],
     queryFn: () => api.get(`/listings/${id}`).then((res) => res.data),
     enabled: !!token,
   });
 
-  // Pre-fill the form once data arrives
   useEffect(() => {
     if (data?.listing) {
       reset({
@@ -68,6 +67,7 @@ export default function EditListingPage() {
     setServerError("");
     try {
       await api.put(`/listings/${id}`, formData);
+      toast.success("Listing updated!");
       router.push("/dashboard/my-listings");
     } catch (err) {
       if (axios.isAxiosError(err)) {

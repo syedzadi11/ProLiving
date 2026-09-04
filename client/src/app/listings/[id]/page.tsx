@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { Listing } from "@/types/listing";
 import { useAuth } from "@/context/AuthContext";
@@ -36,6 +37,7 @@ export default function ListingDetailPage() {
         message,
       });
       setRequestSuccess(true);
+      toast.success("Request sent to the owner!");
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setRequestError(err.response?.data?.message || "Could not send request.");

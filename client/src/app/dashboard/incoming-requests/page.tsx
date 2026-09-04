@@ -3,10 +3,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { ConnectionRequest } from "@/types/connection";
 import { useAuth } from "@/context/AuthContext";
 import { DashboardTabs } from "@/components/DashboardTabs";
+import { ListRowSkeleton } from "@/components/ListRowSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -34,7 +36,10 @@ export default function IncomingRequestsPage() {
   const decisionMutation = useMutation({
     mutationFn: ({ id, decision }: { id: number; decision: "Accepted" | "Rejected" }) =>
       api.patch(`/connections/${id}/decision`, { decision }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["incoming-requests"] }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["incoming-requests"] });
+      toast.success(variables.decision === "Accepted" ? "Request accepted!" : "Request rejected.");
+    },
   });
 
   if (authLoading || !token) {
@@ -45,7 +50,12 @@ export default function IncomingRequestsPage() {
     <div className="max-w-4xl mx-auto px-6 py-8">
       <DashboardTabs />
 
-      {isLoading && <p className="text-gray-500">Loading incoming requests...</p>}
+      {isLoading && (
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => <ListRowSkeleton key={i} />)}
+        </div>
+      )}
+
       {data && data.requests.length === 0 && (
         <p className="text-gray-500">No incoming requests yet.</p>
       )}

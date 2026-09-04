@@ -1,10 +1,11 @@
 "use client";
 
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 import { signupSchema, SignupFormData } from "@/lib/validations/auth";
 import { api } from "@/lib/api";
 import { AuthResponse } from "@/types/user";
@@ -33,15 +34,15 @@ export default function SignupPage() {
     try {
       const res = await api.post<AuthResponse>("/auth/signup", formData);
       login(res.data.user, res.data.token);
+      toast.success("Account created! Welcome to ProLiving.");
       router.push("/");
     } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setServerError(err.response?.data?.message || "Something went wrong. Please try again.");
-        } else {
-          setServerError("Something went wrong. Please try again.");
-        }
+      if (axios.isAxiosError(err)) {
+        setServerError(err.response?.data?.message || "Something went wrong. Please try again.");
+      } else {
+        setServerError("Something went wrong. Please try again.");
+      }
     }
-   
   }
 
   return (

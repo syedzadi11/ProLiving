@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { ListingCardSkeleton } from "@/components/ListingCardSkeleton";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -64,7 +65,6 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* Hero + Search */}
       <div className="bg-teal-50/60 border-b border-teal-100">
         <div className="max-w-5xl mx-auto px-6 pt-14 pb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
@@ -138,7 +138,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Results */}
       <div className="max-w-5xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-5">
           <p className="text-sm text-gray-500">
@@ -159,8 +158,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {isLoading && <p className="text-gray-500">Loading listings...</p>}
-
         {isError && (
           <p className="text-red-500">
             Could not load listings. Is the backend server running?
@@ -172,6 +169,9 @@ export default function HomePage() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {isLoading &&
+            Array.from({ length: 6 }).map((_, i) => <ListingCardSkeleton key={i} />)}
+
           {data?.listings.map((listing) => (
             <Card
               key={listing.listing_id}

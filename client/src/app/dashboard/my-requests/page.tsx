@@ -3,10 +3,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { ConnectionRequest } from "@/types/connection";
 import { useAuth } from "@/context/AuthContext";
 import { DashboardTabs } from "@/components/DashboardTabs";
+import { ListRowSkeleton } from "@/components/ListRowSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -33,7 +35,10 @@ export default function MyRequestsPage() {
 
   const withdrawMutation = useMutation({
     mutationFn: (id: number) => api.delete(`/connections/${id}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["my-requests"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-requests"] });
+      toast.success("Request withdrawn.");
+    },
   });
 
   if (authLoading || !token) {
@@ -44,7 +49,12 @@ export default function MyRequestsPage() {
     <div className="max-w-4xl mx-auto px-6 py-8">
       <DashboardTabs />
 
-      {isLoading && <p className="text-gray-500">Loading your requests...</p>}
+      {isLoading && (
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => <ListRowSkeleton key={i} />)}
+        </div>
+      )}
+
       {data && data.requests.length === 0 && (
         <p className="text-gray-500">You haven&apos;t sent any requests yet.</p>
       )}

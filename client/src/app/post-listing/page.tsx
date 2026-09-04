@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "sonner";
 import { listingSchema, ListingFormData } from "@/lib/validations/listing";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
@@ -35,7 +36,6 @@ export default function PostListingPage() {
     resolver: zodResolver(listingSchema),
   });
 
-  // Protect this route: redirect if not logged in
   useEffect(() => {
     if (!authLoading && !token) {
       router.push("/login");
@@ -46,6 +46,7 @@ export default function PostListingPage() {
     setServerError("");
     try {
       await api.post("/listings", formData);
+      toast.success("Listing posted successfully!");
       router.push("/dashboard/my-listings");
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -56,7 +57,6 @@ export default function PostListingPage() {
     }
   }
 
-  // Don't render the form until we know the user is logged in
   if (authLoading || !token) {
     return <p className="text-center py-16 text-gray-500">Loading...</p>;
   }

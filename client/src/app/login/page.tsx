@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "sonner";
 import { loginSchema, LoginFormData } from "@/lib/validations/auth";
 import { api } from "@/lib/api";
 import { AuthResponse } from "@/types/user";
@@ -33,6 +34,7 @@ export default function LoginPage() {
     try {
       const res = await api.post<AuthResponse>("/auth/login", formData);
       login(res.data.user, res.data.token);
+      toast.success("Welcome back!");
       router.push("/");
     } catch (err) {
       if (axios.isAxiosError(err)) {

@@ -3,10 +3,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { Listing } from "@/types/listing";
 import { useAuth } from "@/context/AuthContext";
 import { DashboardTabs } from "@/components/DashboardTabs";
+import { ListRowSkeleton } from "@/components/ListRowSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
@@ -34,17 +36,26 @@ export default function MyListingsPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => api.delete(`/listings/${id}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["my-listings"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-listings"] });
+      toast.success("Listing deleted.");
+    },
   });
 
   const markRentedMutation = useMutation({
     mutationFn: (id: number) => api.patch(`/listings/${id}/rented`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["my-listings"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-listings"] });
+      toast.success("Marked as rented.");
+    },
   });
 
   const reactivateMutation = useMutation({
     mutationFn: (id: number) => api.patch(`/listings/${id}/reactivate`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["my-listings"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-listings"] });
+      toast.success("Listing reactivated.");
+    },
   });
 
   if (authLoading || !token) {
@@ -55,7 +66,12 @@ export default function MyListingsPage() {
     <div className="max-w-4xl mx-auto px-6 py-8">
       <DashboardTabs />
 
-      {isLoading && <p className="text-gray-500">Loading your listings...</p>}
+      {isLoading && (
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => <ListRowSkeleton key={i} />)}
+        </div>
+      )}
+
       {data && data.listings.length === 0 && (
         <p className="text-gray-500">You haven&apos;t posted any listings yet.</p>
       )}
