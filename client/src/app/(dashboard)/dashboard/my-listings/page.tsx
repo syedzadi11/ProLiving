@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { Listing } from "@/types/listing";
 import { useAuth } from "@/context/AuthContext";
-import { DashboardTabs } from "@/components/DashboardTabs";
-import { ListRowSkeleton } from "@/components/ListRowSkeleton";
+import { DashboardTabs } from "@/components/common/DashboardTabs";
+import { ListRowSkeleton } from "@/components/common/ListRowSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
@@ -38,7 +38,7 @@ export default function MyListingsPage() {
     mutationFn: (id: number) => api.delete(`/listings/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-listings"] });
-      toast.success("Listing deleted.");
+      toast.success("Listing removed successfully.");
     },
   });
 
@@ -46,7 +46,7 @@ export default function MyListingsPage() {
     mutationFn: (id: number) => api.patch(`/listings/${id}/rented`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-listings"] });
-      toast.success("Marked as rented.");
+      toast.success("Listing marked as rented — hidden from search.");
     },
   });
 
@@ -54,7 +54,7 @@ export default function MyListingsPage() {
     mutationFn: (id: number) => api.patch(`/listings/${id}/reactivate`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-listings"] });
-      toast.success("Listing reactivated.");
+      toast.success("Your listing is active again!");
     },
   });
 

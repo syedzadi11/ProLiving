@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { ConnectionRequest } from "@/types/connection";
 import { useAuth } from "@/context/AuthContext";
-import { DashboardTabs } from "@/components/DashboardTabs";
-import { ListRowSkeleton } from "@/components/ListRowSkeleton";
+import { DashboardTabs } from "@/components/common/DashboardTabs";
+import { ListRowSkeleton } from "@/components/common/ListRowSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -18,7 +18,7 @@ const statusStyles: Record<string, string> = {
   Rejected: "bg-red-100 text-red-600",
 };
 
-export default function MyRequestsPage() {
+export default function IncomingRequestsPage() {
   const router = useRouter();
   const { token, isLoading: authLoading } = useAuth();
   const queryClient = useQueryClient();
@@ -28,16 +28,21 @@ export default function MyRequestsPage() {
   }, [authLoading, token, router]);
 
   const { data, isLoading } = useQuery<{ requests: ConnectionRequest[] }>({
-    queryKey: ["my-requests"],
-    queryFn: () => api.get("/connections/my-requests").then((res) => res.data),
+    queryKey: ["incoming-requests"],
+    queryFn: () => api.get("/connections/incoming").then((res) => res.data),
     enabled: !!token,
   });
 
-  const withdrawMutation = useMutation({
-    mutationFn: (id: number) => api.delete(`/connections/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-requests"] });
-      toast.success("Request withdrawn.");
+  const decisionMutation = useMutation({
+    mutationFn: ({ id, decision }: { id: number; decision: "Accepted" | "Rejected" }) =>
+      api.patch(`/connections/${id}/decision`, { decision }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["incoming-requests"] });
+      toast.success(
+        variables.decision === "Accepted"
+          ? "Request accepted — your contact info has been shared."
+          : "Request declined."
+      );
     },
   });
 
@@ -56,7 +61,7 @@ export default function MyRequestsPage() {
       )}
 
       {data && data.requests.length === 0 && (
-        <p className="text-gray-500">You haven&apos;t sent any requests yet.</p>
+        <p className="text-gray-500">No incoming requests yet.</p>
       )}
 
       <div className="space-y-4">
@@ -76,21 +81,33 @@ export default function MyRequestsPage() {
               {req.message}
             </p>
 
-            {req.status === "Accepted" && req.Listing?.User?.phone && (
-              <p className="text-sm bg-green-50 text-green-700 rounded-lg p-3 font-medium">
-                📞 Contact {req.Listing.User.full_name}: {req.Listing.User.phone}
-              </p>
+            {req.status === "Pending" && (
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  onClick={() =>
+                    decisionMutation.mutate({ id: req.connection_id, decision: "Accepted" })
+                  }
+                >
+                  Accept
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-red-600 border-red-200 hover:bg-red-50"
+                  onClick={() =>
+                    decisionMutation.mutate({ id: req.connection_id, decision: "Rejected" })
+                  }
+                >
+                  Reject
+                </Button>
+              </div>
             )}
 
-            {req.status === "Pending" && (
-              <Button
-                size="sm"
-                variant="outline"
-                className="text-red-600 border-red-200 hover:bg-red-50"
-                onClick={() => withdrawMutation.mutate(req.connection_id)}
-              >
-                Withdraw Request
-              </Button>
+            {req.status === "Accepted" && req.ownerPhone && (
+              <p className="text-sm bg-green-50 text-green-700 rounded-lg p-3 font-medium">
+                📞 Contact shared: {req.ownerPhone}
+              </p>
             )}
           </Card>
         ))}

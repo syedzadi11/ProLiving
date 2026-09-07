@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -37,7 +37,7 @@ export default function ListingDetailPage() {
         message,
       });
       setRequestSuccess(true);
-      toast.success("Request sent to the owner!");
+      toast.success("Your request has been sent to the owner.");
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setRequestError(err.response?.data?.message || "Could not send request.");
@@ -48,7 +48,19 @@ export default function ListingDetailPage() {
   }
 
   if (isLoading) return <p className="text-center py-16 text-gray-500">Loading...</p>;
-  if (isError || !data) return <p className="text-center py-16 text-red-500">Listing not found.</p>;
+  if (isError || !data) {
+  return (
+    <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
+      <h1 className="text-2xl font-bold mb-2">Listing Not Found</h1>
+      <p className="text-gray-500 mb-6 max-w-md">
+        This listing may have been removed or the link is incorrect.
+      </p>
+      <Link href="/">
+        <Button variant="outline">Back to Home</Button>
+      </Link>
+    </div>
+  );
+}
 
   const listing = data.listing;
   const isOwner = user?.id === listing.user_id;

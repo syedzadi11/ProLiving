@@ -15,7 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MapPin, Search, SlidersHorizontal } from "lucide-react";
-import { ListingCardSkeleton } from "@/components/ListingCardSkeleton";
+import { ListingCardSkeleton } from "@/components/common/ListingCardSkeleton";
+import { ServerError } from "@/components/common/ServerError";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -31,7 +32,7 @@ export default function HomePage() {
     city: "", area: "", room_type: "", min_price: "", max_price: "", sort: "", order: "",
   });
 
-  const { data, isLoading, isError } = useQuery<ListingsResponse>({
+  const { data, isLoading, isError, refetch } = useQuery<ListingsResponse>({
     queryKey: ["listings", page, filters],
     queryFn: () =>
       api
@@ -158,13 +159,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        {isError && (
-          <p className="text-red-500">
-            Could not load listings. Is the backend server running?
-          </p>
-        )}
+        {isError && <ServerError onRetry={() => refetch()} />}
 
-        {data && data.listings.length === 0 && (
+        {!isError && data && data.listings.length === 0 && (
           <p className="text-gray-500">No listings found. Try adjusting your filters.</p>
         )}
 
@@ -172,33 +169,34 @@ export default function HomePage() {
           {isLoading &&
             Array.from({ length: 6 }).map((_, i) => <ListingCardSkeleton key={i} />)}
 
-          {data?.listings.map((listing) => (
-            <Card
-              key={listing.listing_id}
-              className="p-4 border-gray-200 hover:shadow-md hover:border-teal-200 transition-all"
-            >
-              <span className="text-xs font-semibold bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
-                {listing.room_type}
-              </span>
-              <h2 className="font-semibold mt-2.5 text-gray-900">{listing.title}</h2>
-              <p className="text-sm text-gray-500 flex items-center gap-1 mt-0.5">
-                <MapPin className="w-3.5 h-3.5" />
-                {listing.city}, {listing.area}
-              </p>
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-                <span className="font-bold text-gray-900">
-                  Rs {listing.monthly_rent}
-                  <span className="text-xs font-normal text-gray-400">/mo</span>
+          {!isError &&
+            data?.listings.map((listing) => (
+              <Card
+                key={listing.listing_id}
+                className="p-4 border-gray-200 hover:shadow-md hover:border-teal-200 transition-all"
+              >
+                <span className="text-xs font-semibold bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
+                  {listing.room_type}
                 </span>
-                <Link href={`/listings/${listing.listing_id}`}>
-                  <Button size="sm" variant="outline">View Details</Button>
-                </Link>
-              </div>
-            </Card>
-          ))}
+                <h2 className="font-semibold mt-2.5 text-gray-900">{listing.title}</h2>
+                <p className="text-sm text-gray-500 flex items-center gap-1 mt-0.5">
+                  <MapPin className="w-3.5 h-3.5" />
+                  {listing.city}, {listing.area}
+                </p>
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                  <span className="font-bold text-gray-900">
+                    Rs {listing.monthly_rent}
+                    <span className="text-xs font-normal text-gray-400">/mo</span>
+                  </span>
+                  <Link href={`/listings/${listing.listing_id}`}>
+                    <Button size="sm" variant="outline">View Details</Button>
+                  </Link>
+                </div>
+              </Card>
+            ))}
         </div>
 
-        {data && data.totalPages > 1 && (
+        {!isError && data && data.totalPages > 1 && (
           <div className="flex justify-center gap-2 mt-10">
             <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
               Previous

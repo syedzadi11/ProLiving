@@ -46,7 +46,7 @@ export default function PostListingPage() {
     setServerError("");
     try {
       await api.post("/listings", formData);
-      toast.success("Listing posted successfully!");
+      toast.success("Your listing is now live!");
       router.push("/dashboard/my-listings");
     } catch (err) {
       if (axios.isAxiosError(err)) {

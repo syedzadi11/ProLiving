@@ -67,7 +67,7 @@ export default function EditListingPage() {
     setServerError("");
     try {
       await api.put(`/listings/${id}`, formData);
-      toast.success("Listing updated!");
+      toast.success("Your changes have been saved.");
       router.push("/dashboard/my-listings");
     } catch (err) {
       if (axios.isAxiosError(err)) {
