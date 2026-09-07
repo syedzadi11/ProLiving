@@ -1,6 +1,6 @@
 const connectionService = require('../services/connectionService');
 const asyncHandler = require('../middlewares/asyncHandler');
-const httpStatus = require('../utils/httpStatus');
+const httpStatus = require('../enums/http-status.enum');
 
 const send = asyncHandler(async (req, res) => {
   const request = await connectionService.sendRequest(req.user.user_id, req.body.listing_id, req.body.message);

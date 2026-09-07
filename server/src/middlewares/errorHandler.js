@@ -1,5 +1,5 @@
 
-const httpStatus = require('../utils/httpStatus');
+const httpStatus = require('../enums/http-status.enum');
 
 const errorHandler = (err, req, res, next) => {
   console.error(err);

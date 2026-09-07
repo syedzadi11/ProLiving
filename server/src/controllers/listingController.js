@@ -1,6 +1,6 @@
 const listingService = require('../services/listingService');
 const asyncHandler = require('../middlewares/asyncHandler');
-const httpStatus = require('../utils/httpStatus');
+const httpStatus = require('../enums/http-status.enum');
 
 const create = asyncHandler(async (req, res) => {
   const listing = await listingService.createListing(req.user.user_id, req.body);
