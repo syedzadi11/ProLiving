@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 
@@ -12,6 +13,9 @@ app.use(cors({
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
+
+// Serve uploaded listing images
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 const routes = require('./routes/index');
 app.use('/api', routes);

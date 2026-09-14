@@ -1,11 +1,11 @@
-
-
 const { Listing, User } = require('../database/models');
 const { Op } = require('sequelize');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
+const fs = require('fs');
+const path = require('path');
 
-const createListing = async (userId, data) => {
+const createListing = async (userId, data, imageUrl) => {
   const expiryDate = new Date();
   expiryDate.setDate(expiryDate.getDate() + 30);
 
@@ -13,7 +13,8 @@ const createListing = async (userId, data) => {
     ...data,
     user_id: userId,
     expiry_date: expiryDate,
-    status: 'Active'
+    status: 'Active',
+    image_url: imageUrl || null
   });
 
   return listing;
@@ -69,7 +70,7 @@ const getMyListings = async (userId) => {
   });
 };
 
-const updateListing = async (listingId, userId, data) => {
+const updateListing = async (listingId, userId, data, imageUrl) => {
   const listing = await Listing.findByPk(listingId);
   if (!listing) {
     throw new NotFoundError('Listing not found');
@@ -78,7 +79,19 @@ const updateListing = async (listingId, userId, data) => {
     throw new ForbiddenError('You are not allowed to edit this listing');
   }
 
-  await listing.update(data);
+  const updateData = { ...data };
+
+  if (imageUrl) {
+    if (listing.image_url) {
+      const oldImagePath = path.join(__dirname, '../../uploads', listing.image_url.replace('/uploads/', ''));
+      fs.unlink(oldImagePath, (err) => {
+        if (err) console.error('Could not delete old image:', err.message);
+      });
+    }
+    updateData.image_url = imageUrl;
+  }
+
+  await listing.update(updateData);
   return listing;
 };
 
@@ -89,6 +102,13 @@ const deleteListing = async (listingId, userId) => {
   }
   if (listing.user_id !== userId) {
     throw new ForbiddenError('You are not allowed to delete this listing');
+  }
+
+  if (listing.image_url) {
+    const imagePath = path.join(__dirname, '../../uploads', listing.image_url.replace('/uploads/', ''));
+    fs.unlink(imagePath, (err) => {
+      if (err) console.error('Could not delete listing image:', err.message);
+    });
   }
 
   await listing.destroy();

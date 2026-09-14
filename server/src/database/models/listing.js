@@ -1,5 +1,3 @@
-
-
 const ROOM_TYPES = require('../../enums/room-type.enum');
 const LISTING_STATUS = require('../../enums/listing-status.enum');
 
@@ -46,6 +44,10 @@ module.exports = (sequelize, DataTypes) => {
     expiry_date: {
       type: DataTypes.DATE,
       allowNull: false
+    },
+    image_url: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     tableName: 'listings',

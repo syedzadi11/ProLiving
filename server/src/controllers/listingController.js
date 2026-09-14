@@ -3,7 +3,8 @@ const asyncHandler = require('../middlewares/asyncHandler');
 const httpStatus = require('../enums/http-status.enum');
 
 const create = asyncHandler(async (req, res) => {
-  const listing = await listingService.createListing(req.user.user_id, req.body);
+  const imageUrl = req.file ? `/uploads/listings/${req.file.filename}` : null;
+  const listing = await listingService.createListing(req.user.user_id, req.body, imageUrl);
   res.status(httpStatus.CREATED).json({ message: 'Listing created', listing });
 });
 
@@ -23,7 +24,8 @@ const myListings = asyncHandler(async (req, res) => {
 });
 
 const update = asyncHandler(async (req, res) => {
-  const listing = await listingService.updateListing(req.params.id, req.user.user_id, req.body);
+  const imageUrl = req.file ? `/uploads/listings/${req.file.filename}` : null;
+  const listing = await listingService.updateListing(req.params.id, req.user.user_id, req.body, imageUrl);
   res.status(httpStatus.OK).json({ message: 'Listing updated', listing });
 });
 
