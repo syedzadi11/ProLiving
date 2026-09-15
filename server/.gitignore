@@ -1,5 +1,8 @@
 node_modules/
 .env
+
 uploads/*
 !uploads/.gitkeep
 !uploads/listings/.gitkeep
+
+!uploads/users/.gitkeep

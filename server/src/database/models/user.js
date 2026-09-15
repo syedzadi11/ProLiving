@@ -26,7 +26,11 @@ module.exports = (sequelize, DataTypes) => {
     city: {
       type: DataTypes.STRING(100),
       allowNull: false
-    }
+    },
+    profile_photo: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
   }, {
     tableName: 'users',
     timestamps: true,
