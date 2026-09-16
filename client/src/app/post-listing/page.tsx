@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { ImagePlus, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -24,8 +25,10 @@ import {
 
 export default function PostListingPage() {
   const router = useRouter();
-  const { user, token, isLoading: authLoading } = useAuth();
+  const { token, isLoading: authLoading } = useAuth();
   const [serverError, setServerError] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const {
     register,
@@ -42,10 +45,45 @@ export default function PostListingPage() {
     }
   }, [authLoading, token, router]);
 
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      toast.error("Only JPEG, PNG, and WEBP images are allowed.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be smaller than 5MB.");
+      return;
+    }
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  }
+
+  function removeImage() {
+    setImageFile(null);
+    setImagePreview(null);
+  }
+
   async function onSubmit(formData: ListingFormData) {
     setServerError("");
     try {
-      await api.post("/listings", formData);
+      const payload = new FormData();
+      payload.append("title", formData.title);
+      payload.append("description", formData.description);
+      payload.append("city", formData.city);
+      payload.append("area", formData.area);
+      payload.append("room_type", formData.room_type);
+      payload.append("monthly_rent", String(formData.monthly_rent));
+      if (imageFile) {
+        payload.append("image", imageFile);
+      }
+
+      await api.post("/listings", payload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       toast.success("Your listing is now live!");
       router.push("/dashboard/my-listings");
     } catch (err) {
@@ -87,6 +125,34 @@ export default function PostListingPage() {
             />
             {errors.description && (
               <p className="text-sm text-red-500 mt-1">{errors.description.message}</p>
+            )}
+          </div>
+
+          <div>
+            <Label>Listing Photo (optional)</Label>
+            {imagePreview ? (
+              <div className="relative mt-1.5 w-full h-44 rounded-lg overflow-hidden border border-gray-200">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute top-2 right-2 bg-white/90 rounded-full p-1.5 shadow hover:bg-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <label className="mt-1.5 flex flex-col items-center justify-center gap-2 border border-dashed border-gray-300 rounded-lg h-32 cursor-pointer hover:bg-gray-50 text-gray-400">
+                <ImagePlus className="w-6 h-6" />
+                <span className="text-xs">Click to upload a photo (JPG, PNG, WEBP — max 5MB)</span>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </label>
             )}
           </div>
 

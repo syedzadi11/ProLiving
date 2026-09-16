@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { getImageUrl } from "@/lib/getImageUrl";
 import { ListingsResponse } from "@/types/listing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { MapPin, Search, SlidersHorizontal, ImageOff } from "lucide-react";
 import { ListingCardSkeleton } from "@/components/common/ListingCardSkeleton";
 import { ServerError } from "@/components/common/ServerError";
 import Link from "next/link";
@@ -173,8 +174,23 @@ export default function HomePage() {
             data?.listings.map((listing) => (
               <Card
                 key={listing.listing_id}
-                className="p-4 border-gray-200 hover:shadow-md hover:border-teal-200 transition-all"
+                className="p-4 border-gray-200 hover:shadow-md hover:border-teal-200 transition-all overflow-hidden"
               >
+                <div className="h-36 -mx-4 -mt-4 mb-3 bg-gray-100">
+                  {listing.image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={getImageUrl(listing.image_url) ?? ""}
+                      alt={listing.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                      <ImageOff className="w-7 h-7" />
+                    </div>
+                  )}
+                </div>
+
                 <span className="text-xs font-semibold bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
                   {listing.room_type}
                 </span>

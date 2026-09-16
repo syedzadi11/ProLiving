@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { getImageUrl } from "@/lib/getImageUrl";
 import { Listing } from "@/types/listing";
 import { useAuth } from "@/context/AuthContext";
 import { DashboardTabs } from "@/components/common/DashboardTabs";
 import { ListRowSkeleton } from "@/components/common/ListRowSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ImageOff } from "lucide-react";
 import Link from "next/link";
 
 const statusStyles: Record<string, string> = {
@@ -79,6 +81,21 @@ export default function MyListingsPage() {
       <div className="space-y-4">
         {data?.listings.map((listing) => (
           <Card key={listing.listing_id} className="p-4 flex gap-4 items-center">
+            <div className="w-20 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+              {listing.image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={getImageUrl(listing.image_url) ?? ""}
+                  alt={listing.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-300">
+                  <ImageOff className="w-5 h-5" />
+                </div>
+              )}
+            </div>
+
             <div className="flex-1">
               <span
                 className={`text-xs font-semibold px-2 py-1 rounded-full ${statusStyles[listing.status]}`}

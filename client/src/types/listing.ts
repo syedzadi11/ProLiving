@@ -11,6 +11,7 @@ export interface Listing {
   monthly_rent: number;
   status: ListingStatus;
   user_id: number;
+  image_url?: string | null;
   expiry_date: string;
   created_at: string;
   updated_at: string;

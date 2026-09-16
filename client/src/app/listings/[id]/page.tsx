@@ -1,16 +1,19 @@
 "use client";
-import Link from "next/link";
+
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { getImageUrl } from "@/lib/getImageUrl";
 import { Listing } from "@/types/listing";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageOff } from "lucide-react";
+import Link from "next/link";
 
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -49,18 +52,18 @@ export default function ListingDetailPage() {
 
   if (isLoading) return <p className="text-center py-16 text-gray-500">Loading...</p>;
   if (isError || !data) {
-  return (
-    <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
-      <h1 className="text-2xl font-bold mb-2">Listing Not Found</h1>
-      <p className="text-gray-500 mb-6 max-w-md">
-        This listing may have been removed or the link is incorrect.
-      </p>
-      <Link href="/">
-        <Button variant="outline">Back to Home</Button>
-      </Link>
-    </div>
-  );
-}
+    return (
+      <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
+        <h1 className="text-2xl font-bold mb-2">Listing Not Found</h1>
+        <p className="text-gray-500 mb-6 max-w-md">
+          This listing may have been removed or the link is incorrect.
+        </p>
+        <Link href="/">
+          <Button variant="outline">Back to Home</Button>
+        </Link>
+      </div>
+    );
+  }
 
   const listing = data.listing;
   const isOwner = user?.id === listing.user_id;
@@ -68,6 +71,21 @@ export default function ListingDetailPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-8 grid grid-cols-1 md:grid-cols-[1.6fr_1fr] gap-8">
       <div>
+        <div className="h-72 rounded-xl overflow-hidden bg-gray-100 mb-4">
+          {listing.image_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={getImageUrl(listing.image_url) ?? ""}
+              alt={listing.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-300">
+              <ImageOff className="w-10 h-10" />
+            </div>
+          )}
+        </div>
+
         <span className="text-xs font-semibold bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
           {listing.room_type}
         </span>
