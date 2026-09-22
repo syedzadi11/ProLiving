@@ -1,8 +1,11 @@
+
+
+
 import { z } from "zod";
 
 export const listingSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters"),
-  description: z.string().min(20, "Description must be at least 20 characters"),
+  title: z.string().min(5, "Title must be at least 5 characters").max(90, "Title must be 90 characters or fewer"),
+  description: z.string().min(20, "Description must be at least 20 characters").max(400, "Description must be 400 characters or fewer"),
   city: z.string().min(2, "City is required"),
   area: z.string().min(2, "Area is required"),
   room_type: z.enum(["Single Room", "Shared Room", "Full Apartment"], {

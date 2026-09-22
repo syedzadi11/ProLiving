@@ -1,3 +1,5 @@
+
+
 const Joi = require('joi');
 
 const updateProfileSchema = Joi.object({
@@ -6,4 +8,9 @@ const updateProfileSchema = Joi.object({
   city: Joi.string().min(2).max(100)
 });
 
-module.exports = { updateProfileSchema };
+const changePasswordSchema = Joi.object({
+  current_password: Joi.string().required(),
+  new_password: Joi.string().min(8).required()
+});
+
+module.exports = { updateProfileSchema, changePasswordSchema };

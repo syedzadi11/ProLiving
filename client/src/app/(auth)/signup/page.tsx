@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -14,12 +16,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Logo } from "@/components/common/Logo";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
 export default function SignupPage() {
   const router = useRouter();
   const { login } = useAuth();
   const [serverError, setServerError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -46,51 +51,71 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex justify-center pt-16 px-4">
-      <Card className="w-full max-w-md p-8">
-        <h1 className="text-2xl font-bold text-center mb-1">
-          Create Your Account
+    <div className="flex justify-center py-16 px-4 bg-gray-50 min-h-[calc(100vh-57px)]">
+      <Card className="w-full max-w-md h-fit p-8">
+        <div className="flex justify-center mb-5">
+          <Logo />
+        </div>
+
+        <h1 className="text-2xl font-bold text-center mb-1 text-gray-900">
+          Create Account
         </h1>
         <p className="text-sm text-gray-500 text-center mb-6">
-          Join ProLiving to find or post a room
+          Join ProLiving to post listings and request rooms
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <Label htmlFor="full_name">Full Name</Label>
-            <Input id="full_name" {...register("full_name")} placeholder="Jane Doe" />
+            <Label htmlFor="full_name" className="text-sm font-medium text-gray-700 mb-1.5 block">Full Name</Label>
+            <Input id="full_name" {...register("full_name")} placeholder="e.g. Jannah Syeda" className="bg-gray-50 border-gray-200 focus-visible:ring-teal-600/40" />
             {errors.full_name && (
               <p className="text-sm text-red-500 mt-1">{errors.full_name.message}</p>
             )}
           </div>
 
           <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" {...register("email")} placeholder="jane@example.com" />
+            <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-1.5 block">Email Address</Label>
+            <Input id="email" {...register("email")} placeholder="you@example.com" className="bg-gray-50 border-gray-200 focus-visible:ring-teal-600/40" />
             {errors.email && (
               <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
             )}
           </div>
 
           <div>
-            <Label htmlFor="phone">Phone</Label>
-            <Input id="phone" {...register("phone")} placeholder="03001234567" />
+            <Label htmlFor="phone" className="text-sm font-medium text-gray-700 mb-1.5 block">Phone Number</Label>
+            <Input id="phone" {...register("phone")} placeholder="+92 300 1234567" className="bg-gray-50 border-gray-200 focus-visible:ring-teal-600/40" />
             {errors.phone && (
               <p className="text-sm text-red-500 mt-1">{errors.phone.message}</p>
             )}
           </div>
 
           <div>
-            <Label htmlFor="city">City</Label>
-            <Input id="city" {...register("city")} placeholder="Rawalpindi" />
+            <Label htmlFor="city" className="text-sm font-medium text-gray-700 mb-1.5 block">City</Label>
+            <Input id="city" {...register("city")} placeholder="e.g. Lahore, Karachi, Islamabad" className="bg-gray-50 border-gray-200 focus-visible:ring-teal-600/40" />
             {errors.city && (
               <p className="text-sm text-red-500 mt-1">{errors.city.message}</p>
             )}
           </div>
 
           <div>
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" {...register("password")} placeholder="••••••••" />
+            <Label htmlFor="password" className="text-sm font-medium text-gray-700 mb-1.5 block">Create Password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                {...register("password")}
+                placeholder="At least 8 characters"
+                className="pr-10 bg-gray-50 border-gray-200 focus-visible:ring-teal-600/40"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
             {errors.password && (
               <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
             )}
@@ -101,13 +126,13 @@ export default function SignupPage() {
           )}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Signing up..." : "Sign Up"}
+            {isSubmitting ? "Creating account..." : "Create Account"}
           </Button>
         </form>
 
         <p className="text-sm text-center text-gray-500 mt-6">
           Already have an account?{" "}
-          <Link href="/login" className="text-teal-600 font-medium">
+          <Link href="/login" className="text-teal-700 font-medium">
             Log in
           </Link>
         </p>

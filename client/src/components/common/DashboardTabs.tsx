@@ -1,3 +1,6 @@
+
+
+
 "use client";
 
 import Link from "next/link";
@@ -18,10 +21,10 @@ export function DashboardTabs() {
         <Link
           key={tab.href}
           href={tab.href}
-          className={`px-4 py-2 rounded-full text-sm font-semibold ${
+          className={`px-4 py-2 rounded-full text-[13px] font-semibold transition-colors ${
             pathname === tab.href
-              ? "bg-teal-600 text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              ? "bg-[#00685f] text-white"
+              : "bg-[#f2f3ff] text-[#515f74] hover:bg-[#eaedff]"
           }`}
         >
           {tab.label}

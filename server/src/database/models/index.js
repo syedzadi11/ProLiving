@@ -42,10 +42,7 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-// Verify the database connection on startup.
-// If this fails, the app cannot function correctly, so we log a clear,
-// actionable message and terminate the process rather than letting the
-// server run in a broken state.
+
 sequelize.authenticate()
   .then(() => {
     console.log(`[Database] Connected successfully to "${config.database}" on ${config.host}:${config.port} (${env} environment).`);

@@ -11,7 +11,8 @@ import { api } from "@/lib/api";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { UserProfileResponse } from "@/types/user";
 import { Button } from "@/components/ui/button";
-import { Home, PlusCircle, Menu, UserRound, LogOut } from "lucide-react";
+import { Logo } from "@/components/common/Logo";
+import { PlusCircle, Menu, UserRound, LogOut } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -46,6 +47,7 @@ export function Navbar() {
   }
 
   const dashboardLinks = [
+    { label: "Home", href: "/" },
     { label: "My Listings", href: "/dashboard/my-listings" },
     { label: "My Requests", href: "/dashboard/my-requests" },
     { label: "Incoming Requests", href: "/dashboard/incoming-requests" },
@@ -53,21 +55,19 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
-      <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-          <Home className="w-5 h-5 text-teal-600" />
-          ProLiving
-        </Link>
-
-        {!isLoading && user && (
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
-            {dashboardLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-teal-600">
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        )}
+      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-8">
+          <Logo />
+          {!isLoading && user && (
+            <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+              {dashboardLinks.map((link) => (
+                <Link key={link.href} href={link.href} className="hover:text-teal-600">
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="hidden md:flex items-center gap-3">
           {!isLoading && user ? (
