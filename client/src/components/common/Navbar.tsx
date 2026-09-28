@@ -4,6 +4,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
@@ -80,10 +81,9 @@ export function Navbar() {
               </Link>
 
               <DropdownMenu>
-                <DropdownMenuTrigger className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center hover:ring-2 hover:ring-teal-200 transition-all shrink-0">
+                <DropdownMenuTrigger className="relative w-9 h-9 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center hover:ring-2 hover:ring-teal-200 transition-all shrink-0">
                   {photoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={photoUrl} alt="Profile" className="w-full h-full object-cover" />
+                    <Image src={photoUrl} alt="Profile" fill sizes="36px" className="object-cover" />
                   ) : (
                     <UserRound className="w-5 h-5 text-gray-400" />
                   )}
@@ -129,10 +129,9 @@ export function Navbar() {
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-3 pb-3 border-b border-gray-100"
                     >
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center shrink-0">
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center shrink-0">
                         {photoUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={photoUrl} alt="Profile" className="w-full h-full object-cover" />
+                          <Image src={photoUrl} alt="Profile" fill sizes="40px" className="object-cover" />
                         ) : (
                           <UserRound className="w-5 h-5 text-gray-400" />
                         )}

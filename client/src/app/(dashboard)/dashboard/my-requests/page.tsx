@@ -1,8 +1,12 @@
+
+
+
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Image from "next/image";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { getImageUrl } from "@/lib/getImageUrl";
@@ -103,13 +107,14 @@ export default function MyRequestsPage() {
                 className="bg-white rounded-[8px] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] p-5"
               >
                 <div className="flex gap-4">
-                  <div className="w-16 h-16 rounded-[6px] overflow-hidden bg-[#f2f3ff] flex-shrink-0">
+                  <div className="relative w-16 h-16 rounded-[6px] overflow-hidden bg-[#f2f3ff] flex-shrink-0">
                     {req.Listing?.image_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={getImageUrl(req.Listing.image_url) ?? ""}
                         alt={req.Listing.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="64px"
+                        className="object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[#c7cef0]">

@@ -1,8 +1,12 @@
+
+
+
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Image from "next/image";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { getImageUrl } from "@/lib/getImageUrl";
@@ -111,13 +115,14 @@ export default function MyListingsPage() {
                   className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr_1.8fr] gap-3 px-5 py-4 items-center"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-[6px] overflow-hidden bg-[#f2f3ff] flex-shrink-0">
+                    <div className="relative w-14 h-14 rounded-[6px] overflow-hidden bg-[#f2f3ff] flex-shrink-0">
                       {listing.image_url ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <Image
                           src={getImageUrl(listing.image_url) ?? ""}
                           alt={listing.title}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="56px"
+                          className="object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-[#c7cef0]">

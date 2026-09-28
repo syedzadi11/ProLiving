@@ -1,9 +1,11 @@
+
+
 "use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useParams } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
@@ -39,7 +41,6 @@ export default function EditListingPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageName, setImageName] = useState<string>("");
   const [imageSizeLabel, setImageSizeLabel] = useState<string>("Uploaded");
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -183,6 +184,7 @@ export default function EditListingPage() {
 
           <div>
             <label className={`${labelStyle} mb-2 block`}>Listing Photo</label>
+
             {imagePreview ? (
               <div className="bg-[#f2f3ff] border border-[#dae2fd] rounded-[8px] p-3 flex gap-4 items-center">
                 <div className="w-24 h-20 rounded-[4px] overflow-hidden border border-[#e2e7ff] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] shrink-0 bg-white">
@@ -205,27 +207,30 @@ export default function EditListingPage() {
                   </div>
                   <p className="text-[13px] text-[#3e4947]">{imageSizeLabel}</p>
                   <div className="flex items-center gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="bg-[#eaedff] border border-[#dae2fd] text-[#131b2e] text-[11px] font-semibold px-3 py-1 rounded-[4px]"
+                    <label
+                      htmlFor="edit-listing-photo-input"
+                      className="bg-[#eaedff] border border-[#dae2fd] text-[#131b2e] text-[11px] font-semibold px-3 py-1 rounded-[4px] cursor-pointer"
                     >
                       Replace photo
-                    </button>
+                    </label>
                     <span className="text-[13px] text-[#3e4947]">JPG or PNG, up to 5MB</span>
                   </div>
                 </div>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center gap-2 border border-dashed border-[#dae2fd] bg-[#f2f3ff33] rounded-[8px] h-32 cursor-pointer hover:bg-[#f2f3ff66] text-[#6e7977] transition-colors">
+              <label
+                htmlFor="edit-listing-photo-input"
+                className="flex flex-col items-center justify-center gap-2 border border-dashed border-[#dae2fd] bg-[#f2f3ff33] rounded-[8px] h-32 cursor-pointer hover:bg-[#f2f3ff66] text-[#6e7977] transition-colors"
+              >
                 <span className="text-[13px] font-medium text-[#3e4947]">
                   Drag and drop a photo here, or click to browse
                 </span>
                 <span className="text-[11px] text-[#6e7977]">JPG or PNG, up to 5MB</span>
               </label>
             )}
+
             <input
-              ref={fileInputRef}
+              id="edit-listing-photo-input"
               type="file"
               accept="image/jpeg,image/png,image/webp"
               className="hidden"
@@ -296,6 +301,3 @@ export default function EditListingPage() {
     </div>
   );
 }
-
-
-

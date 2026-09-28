@@ -1,10 +1,12 @@
 
 
+
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 import axios from "axios";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
@@ -72,7 +74,7 @@ export default function ListingDetailPage() {
   }
 
   const listing = data.listing;
-  const isOwner = user?.id === listing.user_id;
+  const isOwner = user?.user_id === listing.user_id;
   const ownerName = listing.User?.full_name ?? "the owner";
 
   return (
@@ -86,11 +88,13 @@ export default function ListingDetailPage() {
 
         <div className="relative h-[300px] md:h-[480px] bg-[#f2f3ff] rounded-[8px] overflow-hidden shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] mb-8">
           {listing.image_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={getImageUrl(listing.image_url) ?? ""}
               alt={listing.title}
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, 1024px"
+              className="object-cover"
+              priority
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-300">
