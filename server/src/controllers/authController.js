@@ -3,9 +3,11 @@ const asyncHandler = require('../middlewares/asyncHandler');
 const httpStatus = require('../enums/http-status.enum');
 
 const signup = asyncHandler(async (req, res) => {
-  const user = await registerUser(req.body);
-  res.status(httpStatus.CREATED).json({ message: 'User registered successfully', user });
+  const result = await registerUser(req.body);
+  res.status(httpStatus.CREATED).json({ message: 'User registered successfully', ...result });
 });
+
+
 
 const login = asyncHandler(async (req, res) => {
   const result = await loginUser(req.body);

@@ -14,7 +14,7 @@ const registerUser = async ({ full_name, email, password, phone, city }) => {
 
   const hashedPassword = await hashPassword(password);
 
-  const newUser = await User.create({
+    const newUser = await User.create({
     full_name,
     email,
     password: hashedPassword,
@@ -22,9 +22,27 @@ const registerUser = async ({ full_name, email, password, phone, city }) => {
     city
   });
 
+  const token = jwt.sign(
+    { user_id: newUser.user_id, email: newUser.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+
   const { password: _, ...userWithoutPassword } = newUser.toJSON();
-  return userWithoutPassword;
+  return { user: userWithoutPassword, token };
 };
+
+//   const newUser = await User.create({
+//     full_name,
+//     email,
+//     password: hashedPassword,
+//     phone,
+//     city
+//   });
+
+//   const { password: _, ...userWithoutPassword } = newUser.toJSON();
+//   return userWithoutPassword;
+// };
 
 const loginUser = async ({ email, password }) => {
   const user = await User.findOne({ where: { email } });
