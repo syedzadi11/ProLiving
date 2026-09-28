@@ -100,9 +100,3 @@ list of endpoints. Key routes:
 - `PATCH /api/connections/:id/decision`, `DELETE /api/connections/:id`
 - `GET/PUT /api/users/me`
 
-## Known Limitations / Roadmap
-
-- Password change and account deletion have frontend UI in place but are not
-  yet wired to backend endpoints (see project notes for the planned API shape).
-- Public profile pages (viewing another user's other listings) are planned
-  but not yet built.
