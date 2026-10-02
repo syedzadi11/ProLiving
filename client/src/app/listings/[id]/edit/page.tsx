@@ -16,6 +16,7 @@ import { Listing } from "@/types/listing";
 import { useAuth } from "@/context/AuthContext";
 import { X, Save } from "lucide-react";
 import Link from "next/link";
+import { PageLoader } from "@/components/common/PageLoader";
 
 const fieldBox = "bg-white border border-[#dae2fd] rounded-[4px] px-3 py-2.5 outline-none w-full text-[14px] text-[#131b2e] placeholder:text-[#6e7977] focus:border-[#00685f]";
 const labelStyle = "text-[13px] font-medium text-[#131b2e]";
@@ -137,7 +138,7 @@ export default function EditListingPage() {
   }
 
   if (authLoading || !token || isLoading) {
-    return <p className="text-center py-16 text-gray-500">Loading...</p>;
+    return <PageLoader />;
   }
 
   return (
@@ -153,7 +154,7 @@ export default function EditListingPage() {
             </span>
           )}
         </div>
-        <h1 className="text-[20px] font-semibold text-[#131b2e] tracking-tight mb-1">
+        <h1 className="text-[24px] font-semibold text-[#131b2e] tracking-tight mb-1">
           Edit Listing
         </h1>
         <p className="text-[13px] text-[#3e4947] mb-6">Update your listing details</p>

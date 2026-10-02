@@ -16,6 +16,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { ImageOff, Lock, Send, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { PageLoader } from "@/components/common/PageLoader";
 
 const QUICK_PROMPTS = ["Move-in by 1st of next month", "Working professional nearby"];
 
@@ -58,7 +59,7 @@ export default function ListingDetailPage() {
     setMessage((prev) => (prev ? `${prev} ${prompt}.` : `${prompt}.`));
   }
 
-  if (isLoading) return <p className="text-center py-16 text-gray-500">Loading...</p>;
+  if (isLoading) return <PageLoader />;
   if (isError || !data) {
     return (
       <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
@@ -150,7 +151,7 @@ export default function ListingDetailPage() {
             </div>
 
             <div className="bg-white rounded-[8px] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] p-6 md:p-8">
-              <h2 className="text-[20px] font-semibold text-[#131b2e] tracking-tight pb-3 mb-4 border-b border-[#e2e7ff66]">
+              <h2 className="text-[18px] font-semibold text-[#131b2e] tracking-tight pb-3 mb-4 border-b border-[#e2e7ff66]">
                 About the Room &amp; Flat Layout
               </h2>
               <p className="text-[16px] leading-[26px] text-[#515f74] whitespace-pre-line break-words">

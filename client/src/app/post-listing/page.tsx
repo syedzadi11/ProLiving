@@ -1,5 +1,7 @@
 
 
+
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -11,6 +13,7 @@ import { toast } from "sonner";
 import { listingSchema, ListingFormData } from "@/lib/validations/listing";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import { PageLoader } from "@/components/common/PageLoader";
 import { ImagePlus, X, ArrowRight } from "lucide-react";
 
 const fieldBox = "bg-white border border-[#dae2fd] rounded-[4px] px-3 py-2.5 outline-none w-full text-[14px] text-[#131b2e] placeholder:text-[#6e7977] focus:border-[#00685f]";
@@ -97,13 +100,13 @@ export default function PostListingPage() {
   }
 
   if (authLoading || !token) {
-    return <p className="text-center py-16 text-gray-500">Loading...</p>;
+    return <PageLoader />;
   }
 
   return (
     <div className="bg-[#faf8ff] min-h-[calc(100vh-57px)] flex justify-center py-12 px-4">
       <div className="w-full max-w-xl bg-white rounded-[8px] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] p-8">
-        <h1 className="text-[20px] font-semibold text-[#131b2e] tracking-tight mb-1">
+        <h1 className="text-[24px] font-semibold text-[#131b2e] tracking-tight mb-1">
           Post a Listing
         </h1>
         <p className="text-[13px] text-[#3e4947] mb-6">

@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -14,6 +16,7 @@ import { UserProfileResponse } from "@/types/user";
 import { Listing } from "@/types/listing";
 import { ConnectionRequest } from "@/types/connection";
 import { useAuth } from "@/context/AuthContext";
+import { PageLoader } from "@/components/common/PageLoader";
 import {
   Camera, Building2, Send, Inbox, ChevronRight, Coins,
   Eye, EyeOff, Check, LogOut, Trash2,
@@ -207,7 +210,7 @@ export default function ProfilePage() {
   }
 
   if (authLoading || !token || isLoading) {
-    return <p className="text-center py-16 text-gray-500">Loading...</p>;
+    return <PageLoader />;
   }
 
   const listingsCount = myListings?.listings.length ?? 0;
@@ -248,7 +251,7 @@ export default function ProfilePage() {
           <div className="lg:col-span-8 flex flex-col gap-6">
             {/* Personal & Contact Information */}
             <div className="bg-white rounded-[8px] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] p-6">
-              <h2 className="text-[16px] font-semibold text-[#131b2e]">
+              <h2 className="text-[18px] font-semibold text-[#131b2e]">
                 Personal & Contact Information
               </h2>
               <p className="text-[13px] text-[#515f74] mt-1 mb-6">
@@ -350,9 +353,9 @@ export default function ProfilePage() {
               </form>
             </div>
 
-            {/* Password & Security (UI only — no backend endpoint yet) */}
+            {/* Password & Security */}
             <div className="bg-white rounded-[8px] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] p-6">
-              <h2 className="text-[16px] font-semibold text-[#131b2e]">Password & Security</h2>
+              <h2 className="text-[18px] font-semibold text-[#131b2e]">Password & Security</h2>
               <p className="text-[13px] text-[#515f74] mt-1 mb-6">
                 Ensure your account uses a secure password to safeguard active listings and inquiries.
               </p>
@@ -433,7 +436,7 @@ export default function ProfilePage() {
           <div className="lg:col-span-4 flex flex-col gap-6">
             <div className="bg-white rounded-[8px] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] p-6">
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-[16px] font-semibold text-[#131b2e]">Platform Activity</h2>
+                <h2 className="text-[18px] font-semibold text-[#131b2e]">Platform Activity</h2>
                 <span className="text-[11px] font-semibold text-[#0f7a4e] bg-[#e2f7ee] px-2 py-0.5 rounded-full">
                   Active
                 </span>
@@ -475,7 +478,7 @@ export default function ProfilePage() {
             </div>
 
             <div className="bg-white rounded-[8px] shadow-[0px_1px_1px_rgba(0,0,0,0.05)] p-6">
-              <h2 className="text-[16px] font-semibold text-[#131b2e] mb-4">Account Management</h2>
+              <h2 className="text-[18px] font-semibold text-[#131b2e] mb-4">Account Management</h2>
 
               <button
                 onClick={handleLogout}
